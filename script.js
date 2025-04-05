@@ -184,11 +184,30 @@ codeEditor.setValue('def color(x, y, z):\n    return WHITE');
 // Hàm hiển thị gợi ý khi người dùng nhấn nút gợi ý
 function hienThiGoiY() {
     const hintOutput = document.getElementById('hintOutput');
-    // Thay thế ký tự xuống dòng bằng thẻ <br> và giữ nguyên khoảng trắng
-    const formattedCode = sampleCodes[currentLevel - 1]
-        .replace(/\n/g, '<br>')
-        .replace(/\s{4}/g, '&nbsp;&nbsp;&nbsp;&nbsp;');
-    hintOutput.innerHTML = formattedCode;
+    
+    // Xóa nội dung cũ nếu có
+    while (hintOutput.firstChild) {
+        hintOutput.removeChild(hintOutput.firstChild);
+    }
+    
+    // Tạo textarea để người dùng có thể dễ dàng sao chép code
+    const textarea = document.createElement('textarea');
+    textarea.value = sampleCodes[currentLevel - 1];
+    textarea.readOnly = true;
+    textarea.className = 'hint-textarea';
+    textarea.style.width = '100%';
+    textarea.style.height = '150px';
+    textarea.style.backgroundColor = '#2c3e50';
+    textarea.style.color = '#f39c12';
+    textarea.style.border = 'none';
+    textarea.style.padding = '10px';
+    textarea.style.fontFamily = '"Courier New", monospace';
+    textarea.style.fontSize = '14px';
+    textarea.style.resize = 'none';
+    textarea.style.outline = 'none';
+    
+    // Thêm textarea vào hintOutput
+    hintOutput.appendChild(textarea);
     hintOutput.style.display = 'block';
 }
 
