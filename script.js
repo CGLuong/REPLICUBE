@@ -206,10 +206,24 @@ function hienThiGoiY() {
     textarea.style.resize = 'none';
     textarea.style.outline = 'none';
     
-    // Thêm textarea vào hintOutput
+    // Tạo container cho nút sao chép
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'hint-button-container';
+    
+    // Tạo nút sao chép code
+    const copyButton = document.createElement('button');
+    copyButton.id = 'copyCodeButton';
+    copyButton.textContent = 'Sao chép code';
+    copyButton.addEventListener('click', saoChepCode);
+    
+    // Thêm nút vào container
+    buttonContainer.appendChild(copyButton);
+    
+    // Thêm textarea và container nút vào hintOutput
     hintOutput.appendChild(textarea);
-    hintOutput.style.display = 'block';
-}
+    hintOutput.appendChild(buttonContainer);
+    hintOutput.style.display = 'block';}
+
 
 // Biến toàn cục
 let pyodide;
@@ -921,6 +935,28 @@ document.getElementById('runButton').disabled = true; // Vô hiệu hóa cho đ�
 
 // Lắng nghe sự kiện cho nút gợi ý
 document.getElementById('hintButton').addEventListener('click', hienThiGoiY);
+
+// Hàm sao chép toàn bộ code gợi ý
+function saoChepCode() {
+    const codeText = sampleCodes[currentLevel - 1];
+    
+    // Sử dụng Clipboard API để sao chép code
+    navigator.clipboard.writeText(codeText).then(() => {
+        // Hiển thị thông báo thành công
+        hienThiKetQua(true, "Đã sao chép code vào clipboard!");
+        
+        // Hiển thị gợi ý nếu chưa hiển thị
+        const hintOutput = document.getElementById('hintOutput');
+        if (hintOutput.style.display !== 'block') {
+            hienThiGoiY();
+        }
+    }).catch(err => {
+        // Hiển thị thông báo lỗi nếu có
+        hienThiKetQua(false, "Không thể sao chép: " + err);
+    });
+}
+
+// Nút sao chép code giờ được tạo động trong hàm hienThiGoiY()
 
 // Lắng nghe sự kiện cho các nút điều hướng cấp độ
 document.getElementById('prevLevelBtn').addEventListener('click', prevLevel);
